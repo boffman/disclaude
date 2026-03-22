@@ -38,8 +38,22 @@ def format_message(row):
     return f'[Discord #{channel_name} | {row["author"]} (ch:{row["channel_id"]})]: {content}'
 
 
+def wait_for_db():
+    """Wait until the inbox table exists (created by bot.py)."""
+    print("[injector] waiting for database...")
+    while True:
+        try:
+            conn = get_db()
+            conn.execute("SELECT 1 FROM inbox LIMIT 1")
+            conn.close()
+            return
+        except Exception:
+            time.sleep(1)
+
+
 def poll():
     """Main polling loop."""
+    wait_for_db()
     print(f"[injector] watching inbox, injecting into tmux session '{TMUX_SESSION}'")
     while True:
         try:

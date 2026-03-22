@@ -27,20 +27,38 @@ Discord ──→ bot.py ──→ SQLite ──→ injector.py ──→ tmux (
 
 ### Quick start (tmux mode)
 
+1. **Run the start script**
 ```bash
 ./disclaude.sh
 ```
 
-On first run, the script checks for the required Python modules. If they're missing, it offers to create a virtual environment (`.venv/`) and install them automatically. On subsequent runs it reuses the existing venv. You can also set up the venv manually:
+This starts the bot, injector, and Claude Code in a tmux session. 
+On first run, the script checks for the required Python modules. If they're missing, it offers to create a virtual environment (`.venv/`) and install them automatically. On subsequent runs it reuses the existing venv. 
+
+2. **Attach to the session**
+   ```bash
+   tmux attach -t disclaude
+   ```
+
+3. **Log in to Claude**
+
+If this is your first time, follow the on-screen prompts to authenticate.
+
+4. **Activate the Discord bridge**
+
+Type `/disclaude` in the Claude session. The bridge is now live and will relay messages between Discord and Claude.
+
+5. **Chat with it**
+
+Invite the bot to a channel, just you and the bot in there is recommended - it reads all messages and gets them as prompts. It then replies back to the channel.
+
+### Logs
+
+Bot and injector output is written to `logs/` instead of the terminal:
 
 ```bash
-python3 -m venv .venv
-.venv/bin/pip install -r requirements.txt
-```
-
-This starts the bot, injector, and Claude Code in a tmux session. Attach with:
-```bash
-tmux attach -t disclaude
+tail -f logs/bot.log        # Discord bot logs
+tail -f logs/injector.log   # Message injector logs
 ```
 
 ### Manual / component-by-component
@@ -60,7 +78,7 @@ python3 cli.py read --all         # Mark all as read
 
 ### Claude Code skill
 
-When running via `disclaude.sh`, the `/disclaude` Claude Code skill activates Discord response mode. The injector feeds incoming messages directly into Claude's tmux session, and the skill tells Claude how to parse them and reply via `cli.py send`. No polling needed — it's push-based. Install the skill by placing `SKILL.md` in `~/.claude/skills/disclaude/`.
+When running via `disclaude.sh`, the `/disclaude` Claude Code skill activates Discord response mode. The injector feeds incoming messages directly into Claude's tmux session, and the skill tells Claude how to parse them and reply via `cli.py send`. No polling needed — it's push-based. The skill is defined in `.claude/skills/disclaude/SKILL.md`.
 
 ## Files
 

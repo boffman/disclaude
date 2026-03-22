@@ -12,6 +12,8 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 SESSION_NAME="disclaude"
 VENV_DIR="$SCRIPT_DIR/.venv"
+LOG_DIR="$SCRIPT_DIR/logs"
+mkdir -p "$LOG_DIR"
 
 # --- Python / venv setup ---
 
@@ -62,7 +64,7 @@ tmux kill-session -t "$SESSION_NAME" 2>/dev/null || true
 # Start the Discord bot if not already running
 if ! pgrep -f "python3.*bot\.py" > /dev/null; then
     cd "$SCRIPT_DIR"
-    "$PYTHON" bot.py &
+    "$PYTHON" bot.py >> "$LOG_DIR/bot.log" 2>&1 &
     BOT_PID=$!
     echo "Started bot.py (PID $BOT_PID)"
 else
@@ -71,7 +73,7 @@ fi
 
 # Start the injector
 cd "$SCRIPT_DIR"
-DISCLAUDE_TMUX_SESSION="$SESSION_NAME" "$PYTHON" injector.py &
+DISCLAUDE_TMUX_SESSION="$SESSION_NAME" "$PYTHON" injector.py >> "$LOG_DIR/injector.log" 2>&1 &
 INJECTOR_PID=$!
 echo "Started injector.py (PID $INJECTOR_PID)"
 
