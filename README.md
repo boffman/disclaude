@@ -19,12 +19,9 @@ Discord ──→ bot.py ──→ SQLite ──→ injector.py ──→ tmux (
    cp .env_template .env
    ```
 
-2. Install Python dependencies:
-   ```
-   pip install --user -r requirements.txt
-   ```
+2. Ensure `tmux` and `claude` (Claude Code CLI) are installed.
 
-3. Ensure `tmux` and `claude` (Claude Code CLI) are installed.
+3. Python dependencies (`discord.py`, `python-dotenv`) are handled automatically — see below.
 
 ## Usage
 
@@ -32,6 +29,13 @@ Discord ──→ bot.py ──→ SQLite ──→ injector.py ──→ tmux (
 
 ```bash
 ./disclaude.sh
+```
+
+On first run, the script checks for the required Python modules. If they're missing, it offers to create a virtual environment (`.venv/`) and install them automatically. On subsequent runs it reuses the existing venv. You can also set up the venv manually:
+
+```bash
+python3 -m venv .venv
+.venv/bin/pip install -r requirements.txt
 ```
 
 This starts the bot, injector, and Claude Code in a tmux session. Attach with:
